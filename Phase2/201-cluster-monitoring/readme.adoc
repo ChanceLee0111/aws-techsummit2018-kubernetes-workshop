@@ -51,6 +51,13 @@ Where `ENVIRONMENT_ID` is your Cloud9 IDE environment id (you should see it once
 
 Starting with Kubernetes 1.7, Dashboard supports authentication. Read more about it at https://github.com/kubernetes/dashboard/wiki/Access-control#introduction. We'll use a bearer token for authentication.
 
+Create admin user in kube-system namespace
+    kubectl create serviceaccount admin -n kube-system (serviceaccount "admin" created)
+    kubectl create clusterrolebinding cluster-admin:kube-system:admin --clusterrole=cluster-admin --serviceaccount=kube-system:admin (clusterrolebinding.rbac.authorization.k8s.io "cluster-admin:kube-system:admin" created)
+
+Copy admin-token from Secret and paste at dashboard token
+    kubectl describe secret $(kubectl get secret -n kube-system | grep admin-token | awk '{print $1}') -n kube-system
+
 Check existing secrets in the `kube-system` namespace:
 
     kubectl -n kube-system get secret
